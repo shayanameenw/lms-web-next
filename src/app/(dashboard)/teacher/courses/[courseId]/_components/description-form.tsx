@@ -56,10 +56,8 @@ export function DescriptionForm({initialData, courseId}: DescriptionFormProps): 
     !isEditing
       ?
       <div className={cn("p-4 space-y-2 rounded-lg bg-muted")}>
-        <p className={cn("text-sm text-foreground/75")}>Description Title</p>
-        <div className={cn("flex justify-between items-start")}>
-          <p
-            className={cn(!initialData.description && "text-foreground/75 italic")}>{initialData.description || "No Description"}</p>
+        <div className={cn("flex justify-between items-center")}>
+          <p className={cn("text-sm text-foreground/75")}>Course Description</p>
           <Button onClick={() => {
             setIsEditing(!isEditing)
           }} className={cn("flex items-center gap-2")} variant="ghost">
@@ -67,6 +65,8 @@ export function DescriptionForm({initialData, courseId}: DescriptionFormProps): 
             Edit Description
           </Button>
         </div>
+        <p
+          className={cn(!initialData.description && "text-foreground/75 italic")}>{initialData.description || "No Description"}</p>
       </div>
       :
       <Form {...form}>
