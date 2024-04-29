@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider     = "sqlite"
+  provider     = "postgresql"
   relationMode = "prisma"
   url          = env("DATABASE_URL")
 }
@@ -24,6 +24,7 @@ model Course {
 
   userId      String
   attachments Attachment[]
+  chapters    Chapter[]
   categoryId  String?
   category    Category?    @relation(fields: [categoryId], references: [id])
 
@@ -45,4 +46,72 @@ model Attachment {
   updatedAt DateTime @updatedAt
 
   @@index([courseId])
+}
+
+model Chapter {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  videoUrl    String?
+  muxData     MuxData?
+  position    Int
+  isPublished Boolean  @default(false)
+  isFree      Boolean  @default(false)
+
+  userProgresses UserProgress[]
+  purchases      Purchase[]
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+}
+
+model MuxData {
+  id         String  @id @default(uuid())
+  assetId    String
+  playbackId String?
+
+  chapterId String?  @unique
+  Chapter   Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+}
+
+model UserProgress {
+  id          String  @id @default(uuid())
+  userId      String
+  isCompleted Boolean
+
+  chapterId String?
+  chapter   Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, chapterId])
+  @@index([chapterId])
+}
+
+model Purchase {
+  id     String @id @default(uuid())
+  userId String
+
+  chapterId String?
+  chapter   Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([chapterId])
+}
+
+model StripeCustomer {
+  id         String @id @default(uuid())
+  userId     String @unique
+  customerId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -22,11 +22,14 @@ export function Sidebar({className}: Readonly<SidebarProps>): ReactNode {
     <aside className={cn(className)}>
       <Logo/>
       <ScrollArea className={cn("flex-1")}>
-        <ul className={cn("px-8 flex flex-col gap-2")}>
+        <ul className={cn("flex flex-col")}>
           {sidebarRoutes.map(({url, label}) => (
             <li key={label}>
               <Link href={url}>
-                <Button className={cn("w-full justify-stretch")} variant={pathName === url ? "default" : "secondary"}>
+                <Button className={cn("rounded-none w-full justify-stretch",
+                  (pathName === url || (url !== "/" && pathName.includes(url))) && "lg:border-r-2 border-primary"
+                )}
+                        variant={(pathName === url || (url !== "/" && pathName.includes(url))) ? "secondary" : "ghost"}>
                   {label}
                 </Button>
               </Link>

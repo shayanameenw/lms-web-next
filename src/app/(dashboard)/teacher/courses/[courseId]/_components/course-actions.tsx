@@ -1,0 +1,88 @@
+"use client"
+
+import {ReactNode, useState} from "react";
+import {Trash} from "lucide-react";
+import {Button} from "~/components/ui/button";
+import {cn} from "~/lib/utils";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle, AlertDialogTrigger
+} from "~/components/ui/alert-dialog";
+import {default as axios} from "axios";
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
+
+interface CourseActionsProps {
+  isPublished: Boolean
+  courseId: string
+  disabled: Boolean
+}
+
+export function CourseActions({isPublished, courseId, disabled}: Readonly<CourseActionsProps>): ReactNode {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const router = useRouter()
+
+  const statusHandler = async () => {
+    try {
+      setIsLoading(true)
+
+      if (isPublished) {
+        await axios.patch(`/api/courses/${courseId}/unpublish`)
+      } else {
+        await axios.patch(`/api/courses/${courseId}/publish`)
+      }
+
+      toast.success(`Course ${isPublished ? "Unpublished" : "Published"} Successfully.`)
+      router.refresh()
+    } catch (error) {
+      toast.error("An error occurred. Please try again later.");
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const deleteHandler = async () => {
+    try {
+      setIsLoading(true)
+
+      await axios.delete(`/api/courses/${courseId}`)
+
+      toast.success("Chapter Deleted Successfully.")
+      router.refresh()
+      router.push("/teacher/courses")
+    } catch (error) {
+      toast.error("An error occurred. Please try again later.");
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <div className={cn("flex items-center gap-2")}>
+      <Button onClick={statusHandler} size="sm" variant="outline"
+              disabled={(disabled && true) || isLoading}>{!isPublished ? "Publish" : "Unpublish"}</Button>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button size="sm" variant="destructive"
+                  disabled={isLoading}><Trash size={16}/></Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={deleteHandler}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  )
+}

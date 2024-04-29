@@ -4,7 +4,7 @@ import {ReactNode, useState} from "react";
 import {usePathname} from "next/navigation";
 import {default as Link} from "next/link";
 import {UserButton} from "@clerk/nextjs";
-import {BookType, Cross, LogOut, Menu, Search} from "lucide-react";
+import {BookType, X, LogOut, Menu, Search} from "lucide-react";
 import {Sidebar} from "~/app/(dashboard)/_components/sidebar";
 import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
@@ -40,7 +40,10 @@ export function Header({className}: Readonly<HeaderProps>): ReactNode {
             <Sidebar className={cn("py-4 h-full flex flex-col gap-4")}/>
           </SheetContent>
         </Sheet>
-        <Input className={cn("hidden md:block lg:w-96")} type="text" placeholder="Search..."/>
+        {
+          pathname === "/browse" &&
+          <Input className={cn("hidden md:block lg:w-96")} type="text" placeholder="Search..."/>
+        }
       </div>
       <div className={cn("flex items-center gap-2")}>
         {!isSearching && (
@@ -65,19 +68,20 @@ export function Header({className}: Readonly<HeaderProps>): ReactNode {
           )
         )
         }
-        <div className={cn("border rounded-lg flex items-center gap-2", !isSearching && "border-none")}>
-          {isSearching && (
-            <Input className={cn("border-none")} type="text" placeholder="Search..."/>
-          )}
-          <Button onClick={() => {
-            setIsSearching((prev) => !prev)
-          }} className={cn("rounded-full p-2 md:hidden", isSearching && "border-none rounded-lg")} variant="outline">
-            {isSearching
-              ? <Cross/>
-              : <Search/>
-            }
-          </Button>
-        </div>
+        {pathname === "/browse" &&
+          <div className={cn("border rounded-lg flex items-center gap-2", !isSearching && "border-none")}>
+            {isSearching && (
+              <Input className={cn("border-none")} type="text" placeholder="Search..."/>
+            )}
+            <Button onClick={() => {
+              setIsSearching((prev) => !prev)
+            }} className={cn("rounded-full p-2 md:hidden", isSearching && "border-none rounded-lg")} variant="outline">
+              {isSearching
+                ? <X/>
+                : <Search/>
+              }
+            </Button>
+          </div>}
         <ThemeMenu className={cn("rounded-full")} variant="outline"/>
         <Button className={cn("rounded-full py-2 px-1.5")} variant="outline">
           <UserButton/>

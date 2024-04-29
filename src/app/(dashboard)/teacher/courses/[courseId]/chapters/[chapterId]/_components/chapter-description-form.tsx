@@ -1,7 +1,7 @@
 "use client"
 
 import {ReactNode, useState} from "react";
-import type {Course} from "~/lib/db"
+import type {Chapter} from "~/lib/db"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/components/ui/form";
 import {z as zod} from "zod";
 import {useForm} from "react-hook-form";
@@ -10,29 +10,24 @@ import {default as axios} from "axios";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {cn} from "~/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
+import {Editor} from "~/components/common/editor";
+import {Preview} from "~/components/common/preview";
 import {Button} from "~/components/ui/button";
 import {Pencil} from "lucide-react";
 
-interface CategoryFormProps {
+interface ChapterDescriptionFormProps {
   courseId: string;
-  initialData: Course
-  options: { label: string; value: string }[]
+  chapterId: string;
+  initialData: Chapter
 }
 
 const formSchema = zod.object({
-  categoryId: zod.string({required_error: "Category is Required"}).min(1, {
-    message: "Category Id must be at least 1 characters"
+  description: zod.string({required_error: "Chapter Description is Required"}).min(3, {
+    message: "Chapter Description must be at least 3 characters"
   }),
 })
 
-export function CategoryForm({options, initialData, courseId}: CategoryFormProps): ReactNode {
+export function ChapterDescriptionForm({initialData, courseId, chapterId}: ChapterDescriptionFormProps): ReactNode {
   const [isEditing, setIsEditing] = useState(false)
 
   const router = useRouter()
@@ -40,7 +35,7 @@ export function CategoryForm({options, initialData, courseId}: CategoryFormProps
   const form = useForm<zod.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      categoryId: initialData.categoryId || ""
+      description: initialData.description || ""
     }
   })
 
@@ -48,9 +43,9 @@ export function CategoryForm({options, initialData, courseId}: CategoryFormProps
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, data)
+      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, data)
 
-      toast.success("Course Category Updated Successfully.")
+      toast.success("Chapter Description Updated Successfully.")
       setIsEditing(!isEditing)
       router.refresh()
     } catch (error) {
@@ -58,50 +53,40 @@ export function CategoryForm({options, initialData, courseId}: CategoryFormProps
     }
   });
 
-  const selectedOption = options.find(option => option.value === initialData.categoryId)
-
   return (
     !isEditing
       ?
       <div className={cn("p-4 space-y-2 rounded-lg bg-muted")}>
         <div className={cn("flex justify-between items-center")}>
-          <p className={cn("text-sm text-foreground/75")}>Course Category</p>
+          <p className={cn("text-sm text-foreground/75")}>Chapter Description</p>
           <Button onClick={() => {
             setIsEditing(!isEditing)
           }} className={cn("flex items-center gap-2")} variant="ghost">
             <Pencil size={16}/>
-            Edit Category
+            Edit Chapter Description
           </Button>
         </div>
-        <p
-          className={cn(!initialData.categoryId && "text-foreground/75 italic")}>{selectedOption?.label || "No Category"}</p>
+        <div
+          className={cn(!initialData.description && "text-foreground/75 italic")}>{
+          initialData.description
+            ? <Preview value={initialData.description}/>
+            : "No Description"}</div>
       </div>
       :
       <Form {...form}>
         <form onSubmit={onSubmit} className={cn("p-4 rounded-lg flex flex-col gap-4 bg-muted")}>
           <FormField
             control={form.control}
-            name="categoryId"
-            render={({field}) => {
-              console.log(field)
-
-              return <FormItem>
-                <FormLabel className={cn("text-foreground/75")}>Course Category</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a category"/>
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {options.map(option => (
-                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            name="description"
+            render={({field}) => (
+              <FormItem>
+                <FormLabel className={cn("text-foreground/75")}>Chapter Description</FormLabel>
+                <FormControl>
+                  <Editor disabled={isSubmitting} {...field} />
+                </FormControl>
                 <FormMessage/>
               </FormItem>
-            }}
+            )}
           />
           <div className={cn("space-x-4")}>
             <Button onClick={() => {
