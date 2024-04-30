@@ -1,12 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
-import { default as Link } from "next/link";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { columns } from "~/app/(dashboard)/teacher/courses/_components/columns";
 import { DataTable } from "~/app/(dashboard)/teacher/courses/_components/data-table";
-import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import db from "~/lib/db";
+import { default as db } from "~/lib/db";
 import { cn } from "~/lib/utils";
 
 export default async function Page(): Promise<ReactNode> {

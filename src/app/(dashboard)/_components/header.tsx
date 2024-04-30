@@ -3,14 +3,16 @@
 import { UserButton } from "@clerk/nextjs";
 import { BookType, LogOut, Menu, Search, X } from "lucide-react";
 import { default as Link } from "next/link";
-import { usePathname } from "next/navigation";
-import { type ReactNode, useState } from "react";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { type ReactNode, useState, useEffect } from "react";
 import { Sidebar } from "~/app/(dashboard)/_components/sidebar";
 import { ThemeMenu } from "~/components/theme/theme-menu";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import { cn } from "~/lib/utils";
+import { default as qs } from "query-string";
+import { useDebounce } from "~/hooks/use-debounce";
 
 interface HeaderProps {
 	className?: string;
@@ -18,10 +20,36 @@ interface HeaderProps {
 
 export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 	const [isSearching, setIsSearching] = useState(false);
+	const [browseValue, setBrowseValue] = useState("");
+
+	const debouncedBrowseValue = useDebounce(browseValue);
+
 	const pathname = usePathname();
 
 	const isTeacherPage = pathname.startsWith("/teacher");
 	const isPlayerPage = pathname.startsWith("chapter");
+	const isBrowsePage = pathname.startsWith("/browse");
+
+	const router = useRouter();
+	const searchParams = useSearchParams();
+
+	const currentBrowseValue = searchParams.get("browse");
+	const currentCategory = searchParams.get("category");
+
+	useEffect(() => {
+		const url = qs.stringifyUrl(
+			{
+				url: pathname,
+				query: {
+					browse: debouncedBrowseValue,
+					category: currentCategory,
+				},
+			},
+			{ skipNull: true, skipEmptyString: true },
+		);
+
+		router.push(url);
+	}, [pathname, router, debouncedBrowseValue, currentCategory]);
 
 	return (
 		<header
@@ -38,8 +66,12 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 						<Sidebar className={cn("py-4 h-full flex flex-col gap-4")} />
 					</SheetContent>
 				</Sheet>
-				{pathname === "/browse" && (
+				{isBrowsePage && (
 					<Input
+						onChange={(event) => {
+							setBrowseValue(event.target.value);
+						}}
+						value={browseValue}
 						className={cn("hidden md:block lg:w-96")}
 						type="text"
 						placeholder="Search..."
@@ -69,7 +101,7 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 							</Button>
 						</Link>
 					))}
-				{pathname === "/browse" && (
+				{isBrowsePage && (
 					<div
 						className={cn(
 							"border rounded-lg flex items-center gap-2",
@@ -78,6 +110,10 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 					>
 						{isSearching && (
 							<Input
+								onChange={(event) => {
+									setBrowseValue(event.target.value);
+								}}
+								value={browseValue}
 								className={cn("border-none")}
 								type="text"
 								placeholder="Search..."
