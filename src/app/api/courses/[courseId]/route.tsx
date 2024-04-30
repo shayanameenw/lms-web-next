@@ -1,105 +1,111 @@
-import {NextRequest, NextResponse} from "next/server";
-import {auth} from "@clerk/nextjs/server";
-import {default as db} from "~/lib/db";
-import {default as Mux} from "@mux/mux-node";
+import { auth } from "@clerk/nextjs/server";
+import { default as Mux } from "@mux/mux-node";
+import { type NextRequest, NextResponse } from "next/server";
+import { default as db } from "~/lib/db";
 
-const {video} = new Mux(
-  {
-    tokenId: process.env.MUX_TOKEN_ID,
-    tokenSecret: process.env.MUX_TOKEN_SECRET,
-  }
-)
+const { video } = new Mux({
+	tokenId: process.env.MUX_TOKEN_ID,
+	tokenSecret: process.env.MUX_TOKEN_SECRET,
+});
 
-export async function PATCH(request: NextRequest, {params}: { params: { courseId: string } }): Promise<NextResponse> {
-  try {
-    const {userId} = auth()
+export async function PATCH(
+	request: NextRequest,
+	{ params }: { params: { courseId: string } },
+): Promise<NextResponse> {
+	try {
+		const { userId } = auth();
 
-    if (!userId) {
-      return new NextResponse("Unauthorized", {status: 401})
-    }
+		if (!userId) {
+			return new NextResponse("Unauthorized", { status: 401 });
+		}
 
-    const data = await request.json()
+		const data = await request.json();
 
-    const course = await db.course.update({
-      where: {
-        id: params.courseId,
-        userId,
-      },
-      data
-    })
+		const course = await db.course.update({
+			where: {
+				id: params.courseId,
+				userId,
+			},
+			data,
+		});
 
-    return NextResponse.json(course)
-  } catch (error) {
-    console.log("[COURSES_ID]", error)
+		return NextResponse.json(course);
+	} catch (error) {
+		console.log("[COURSES_ID]", error);
 
-    return new NextResponse("Internal Error", {status: 500})
-  }
+		return new NextResponse("Internal Error", { status: 500 });
+	}
 }
 
-export async function DELETE(request: NextRequest, {params}: {
-  params: { courseId: string }
-}): Promise<NextResponse> {
-  try {
-    const {userId} = auth()
+export async function DELETE(
+	request: NextRequest,
+	{
+		params,
+	}: {
+		params: { courseId: string };
+	},
+): Promise<NextResponse> {
+	try {
+		const { userId } = auth();
 
-    if (!userId) {
-      return new NextResponse("Unauthorized", {status: 401})
-    }
+		if (!userId) {
+			return new NextResponse("Unauthorized", { status: 401 });
+		}
 
-    const ownCourse = await db.course.findUnique({
-      where: {
-        id: params.courseId,
-        userId,
-      }
-    })
+		const ownCourse = await db.course.findUnique({
+			where: {
+				id: params.courseId,
+				userId,
+			},
+		});
 
-    if (!ownCourse) {
-      return new NextResponse("Unauthorized", {status: 401})
-    }
+		if (!ownCourse) {
+			return new NextResponse("Unauthorized", { status: 401 });
+		}
 
-    const chapters = await db.chapter.findMany({
-      where: {
-        courseId: params.courseId,
-      }
-    })
+		const chapters = await db.chapter.findMany({
+			where: {
+				courseId: params.courseId,
+			},
+		});
 
-    for (const chapter of chapters) {
-      if (chapter?.videoUrl) {
-        const existingMuxData = await db.muxData.findFirst({
-          where: {
-            chapterId: chapter.id,
-          }
-        })
+		for (const chapter of chapters) {
+			if (chapter?.videoUrl) {
+				const existingMuxData = await db.muxData.findFirst({
+					where: {
+						chapterId: chapter.id,
+					},
+				});
 
-        if (existingMuxData) {
-          await video.assets.delete(existingMuxData.assetId)
+				if (existingMuxData) {
+					await video.assets.delete(existingMuxData.assetId);
 
-          await db.muxData.delete({
-            where: {
-              id: existingMuxData.id,
-            }
-          })
-        }
-      }
+					await db.muxData.delete({
+						where: {
+							id: existingMuxData.id,
+						},
+					});
+				}
+			}
 
-      await db.chapter.delete({
-        where: {
-          id: chapter.id,
-          courseId: params.courseId
-        }
-      })
-    }
+			await db.chapter.delete({
+				where: {
+					id: chapter.id,
+					courseId: params.courseId,
+				},
+			});
+		}
 
-    await db.course.delete({
-      where: {
-        id: ownCourse.id,
-      }
-    })
-    
-    return NextResponse.json(ownCourse)
-  } catch (error) {
-    console.log("[COURSES_ID_CHAPTER_ID]", error)
+		await db.course.delete({
+			where: {
+				id: ownCourse.id,
+			},
+		});
 
-    return new NextResponse("Internal Error", {status: 500})
-  }
+		return NextResponse.json(ownCourse);
+	} catch (error) {
+		console.log("[COURSES_ID_CHAPTER_ID]", error);
+
+		return new NextResponse("Internal Error", { status: 500 });
+	}
 }

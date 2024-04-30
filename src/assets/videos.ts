@@ -1,1 +1,1 @@
-export const videos = {}
+export const videos = {};

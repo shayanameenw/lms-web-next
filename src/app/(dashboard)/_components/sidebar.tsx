@@ -1,42 +1,53 @@
-"use client"
+"use client";
 
-import type {ReactNode} from "react";
-import {default as Link} from "next/link";
-import {usePathname} from "next/navigation";
-import {Logo} from "~/components/common/logo";
-import {ScrollArea} from "~/components/ui/scroll-area";
-import {guestsRoutes, teacherRoutes} from "~/lib/routes";
-import {cn} from "~/lib/utils";
-import {Button} from "~/components/ui/button";
+import { default as Link } from "next/link";
+import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
+import { Logo } from "~/components/common/logo";
+import { Button } from "~/components/ui/button";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { guestsRoutes, teacherRoutes } from "~/lib/routes";
+import { cn } from "~/lib/utils";
 
 interface SidebarProps {
-  className?: string;
+	className?: string;
 }
 
-export function Sidebar({className}: Readonly<SidebarProps>): ReactNode {
-  const pathName = usePathname()
+export function Sidebar({ className }: Readonly<SidebarProps>): ReactNode {
+	const pathName = usePathname();
 
-  const sidebarRoutes = pathName.startsWith("/teacher") ? teacherRoutes : guestsRoutes;
+	const sidebarRoutes = pathName.startsWith("/teacher")
+		? teacherRoutes
+		: guestsRoutes;
 
-  return (
-    <aside className={cn(className)}>
-      <Logo/>
-      <ScrollArea className={cn("flex-1")}>
-        <ul className={cn("flex flex-col")}>
-          {sidebarRoutes.map(({url, label}) => (
-            <li key={label}>
-              <Link href={url}>
-                <Button className={cn("rounded-none w-full justify-stretch",
-                  (pathName === url || (url !== "/" && pathName.includes(url))) && "lg:border-r-2 border-primary"
-                )}
-                        variant={(pathName === url || (url !== "/" && pathName.includes(url))) ? "secondary" : "ghost"}>
-                  {label}
-                </Button>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </ScrollArea>
-    </aside>
-  )
+	return (
+		<aside className={cn(className)}>
+			<Logo />
+			<ScrollArea className={cn("flex-1")}>
+				<ul className={cn("flex flex-col")}>
+					{sidebarRoutes.map(({ url, label }) => (
+						<li key={label}>
+							<Link href={url}>
+								<Button
+									className={cn(
+										"rounded-none w-full justify-stretch",
+										(pathName === url ||
+											(url !== "/" && pathName.includes(url))) &&
+											"lg:border-r-2 border-primary",
+									)}
+									variant={
+										pathName === url || (url !== "/" && pathName.includes(url))
+											? "secondary"
+											: "ghost"
+									}
+								>
+									{label}
+								</Button>
+							</Link>
+						</li>
+					))}
+				</ul>
+			</ScrollArea>
+		</aside>
+	);
 }
