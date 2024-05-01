@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
 
-export function Page(): ReactNode {
+export default function Page(): ReactNode {
 	return <></>;
 }

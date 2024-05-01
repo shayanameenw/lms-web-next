@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
+import type { CourseWithProgress } from "~/queries/get-courses";
+
 import { CourseCard } from "~/components/common/course-card";
 import { cn } from "~/lib/utils";
-import type { CourseWithProgress } from "~/queries/get-courses";
 
 interface CourseListProps {
 	items?: CourseWithProgress[];
