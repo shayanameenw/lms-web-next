@@ -34,12 +34,18 @@ const iconBadgeVariants = cva(
 type IconBadgeVariantsProps = VariantProps<typeof iconBadgeVariants>;
 
 interface IconBadgeProps extends IconBadgeVariantsProps {
+	className?: string;
 	Icon: LucideIcon;
 }
 
-export function IconBadge({ Icon, variant, size }: IconBadgeProps): ReactNode {
+export function IconBadge({
+	className,
+	Icon,
+	variant,
+	size,
+}: IconBadgeProps): ReactNode {
 	return (
-		<div className={cn(iconBadgeVariants({ variant, size }))}>
+		<div className={cn(iconBadgeVariants({ variant, size }), className)}>
 			<Icon />
 		</div>
 	);
