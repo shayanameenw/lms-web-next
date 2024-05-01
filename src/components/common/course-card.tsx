@@ -24,9 +24,9 @@ export function CourseCard({ course }: Readonly<CourseCardProps>): ReactNode {
 	return (
 		<Link href={`/courses/${course.id}`}>
 			<Card>
-				<CardContent className={cn("relative p-0")}>
+				<CardContent className={cn("p-0 relative")}>
 					<Image
-						className="h-56 object-cover object-center"
+						className="h-56 object-cover object-center rounded-lg"
 						height={224}
 						width={332}
 						src={course.imageUrl as string}
