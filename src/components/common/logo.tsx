@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
+import { default as Link } from "next/link";
 import { primaryFont } from "~/lib/fonts";
 import { cn } from "~/lib/utils";
 
 export function Logo(): ReactNode {
 	return (
-		<div className={cn("flex justify-center items-center gap-4")}>
+		<Link href={"/"} className={cn("flex justify-center items-center gap-4")}>
 			<h1
 				className={cn(
 					primaryFont.className,
@@ -13,6 +14,6 @@ export function Logo(): ReactNode {
 			>
 				LMS
 			</h1>
-		</div>
+		</Link>
 	);
 }

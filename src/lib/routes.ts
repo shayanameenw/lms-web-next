@@ -9,19 +9,19 @@ export const guestsRoutes = [
 	{
 		Icon: Compass,
 		label: "Browse",
-		url: "/browse",
+		url: "/courses",
 	},
 ];
 
 export const teacherRoutes = [
 	{
+		Icon: BarChart,
+		label: "Analytics",
+		url: "/teacher",
+	},
+	{
 		Icon: List,
 		label: "Courses",
 		url: "/teacher/courses",
-	},
-	{
-		Icon: BarChart,
-		label: "Analytics",
-		url: "/teacher/analytics",
 	},
 ];
