@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
-import { BrowseSection } from "~/app/(dashboard)/browse/_components/browse-section";
+import { BrowseSection } from "~/app/(dashboard)/courses/_components/browse-section";
 import { default as db } from "~/lib/db";
 import { cn } from "~/lib/utils";
 import { getCourses } from "~/queries/get-courses";

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { Categories } from "~/app/(dashboard)/browse/_components/categories";
-import { CourseList } from "~/app/(dashboard)/browse/_components/course-list";
+import { Categories } from "~/app/(dashboard)/courses/_components/categories";
+import { CourseList } from "~/app/(dashboard)/courses/_components/course-list";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import type { Category } from "~/lib/db";
 import { cn } from "~/lib/utils";

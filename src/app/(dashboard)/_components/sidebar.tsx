@@ -25,27 +25,29 @@ export function Sidebar({ className }: Readonly<SidebarProps>): ReactNode {
 			<Logo />
 			<ScrollArea className={cn("flex-1")}>
 				<ul className={cn("flex flex-col")}>
-					{sidebarRoutes.map(({ url, label }) => (
-						<li key={label}>
-							<Link href={url}>
-								<Button
-									className={cn(
-										"rounded-none w-full justify-stretch",
-										(pathName === url ||
-											(url !== "/" && pathName.includes(url))) &&
-											"lg:border-r-2 border-primary",
-									)}
-									variant={
-										pathName === url || (url !== "/" && pathName.includes(url))
-											? "secondary"
-											: "ghost"
-									}
-								>
-									{label}
-								</Button>
-							</Link>
-						</li>
-					))}
+					{sidebarRoutes.map(({ url, label }) => {
+						const isSelected =
+							pathName === url ||
+							(pathName !== "/" && pathName.startsWith(url));
+
+						console.log("isSelected", isSelected ? "YES" : "NO");
+
+						return (
+							<li key={label}>
+								<Link href={url}>
+									<Button
+										className={cn(
+											"rounded-none w-full justify-stretch",
+											isSelected && "md:border-r-2 border-primary",
+										)}
+										variant={isSelected ? "secondary" : "ghost"}
+									>
+										{label}
+									</Button>
+								</Link>
+							</li>
+						);
+					})}
 				</ul>
 			</ScrollArea>
 		</aside>

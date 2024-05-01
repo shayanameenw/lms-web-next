@@ -1,11 +1,13 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { UserButton } from "@clerk/nextjs";
 import { BookType, LogOut, Menu, Search, X } from "lucide-react";
 import { default as Link } from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { default as qs } from "query-string";
-import { type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar } from "~/app/(dashboard)/_components/sidebar";
 import { ThemeMenu } from "~/components/theme/theme-menu";
 import { Button } from "~/components/ui/button";
@@ -28,7 +30,7 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 
 	const isTeacherPage = pathname.startsWith("/teacher");
 	const isPlayerPage = pathname.startsWith("chapter");
-	const isBrowsePage = pathname.startsWith("/browse");
+	const isBrowsePage = pathname.startsWith("/courses");
 
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -71,7 +73,7 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 							setTitle(event.target.value);
 						}}
 						value={title}
-						className={cn("hidden md:block lg:w-96")}
+						className={cn("hidden md:block md:w-96")}
 						type="text"
 						placeholder="Search..."
 					/>
@@ -90,7 +92,7 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 							</Button>
 						</Link>
 					) : (
-						<Link href="/teacher/courses">
+						<Link href="/teacher">
 							<Button
 								className={cn("rounded-full p-2 md:rounded-lg")}
 								variant="outline"

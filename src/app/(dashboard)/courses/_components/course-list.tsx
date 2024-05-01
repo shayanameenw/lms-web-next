@@ -18,7 +18,7 @@ export function CourseList({ items }: Readonly<CourseListProps>): ReactNode {
 				{items?.map((item) => {
 					return (
 						<li key={item.id}>
-							<CourseCard item={item} />
+							<CourseCard course={item} />
 						</li>
 					);
 				})}

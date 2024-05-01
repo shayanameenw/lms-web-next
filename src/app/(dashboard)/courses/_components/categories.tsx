@@ -72,6 +72,7 @@ export function CategoryItem({
 			onClick={categoryClickHandler}
 			className={cn("rounded-3xl gap-2")}
 			variant={isSelected ? "default" : "outline"}
+			size="sm"
 		>
 			<Icon size={20} />
 			<span className={cn("truncate")}>{label}</span>
@@ -86,7 +87,7 @@ export function Categories({ items }: Readonly<CategoriesProps>): ReactNode {
 				"w-[calc(100vw_-_4rem)] md:w-[calc(100vw_-_16rem_-_4rem)] pb-3",
 			)}
 		>
-			<ul className={cn("flex")}>
+			<ul className={cn("flex gap-2")}>
 				{items.map((item) => {
 					return (
 						<li key={item.id}>
