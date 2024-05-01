@@ -1,8 +1,5 @@
 "use client";
 
-import type { Category } from "~/lib/db";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
 	ActivityIcon,
@@ -13,10 +10,13 @@ import {
 	TelescopeIcon,
 	VideoIcon,
 } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
-import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { default as qs } from "query-string";
+import type { ReactNode } from "react";
+import { Button } from "~/components/ui/button";
+import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
+import type { Category } from "~/lib/db";
+import { cn } from "~/lib/utils";
 
 interface CategoriesProps {
 	items: Category[];
@@ -47,18 +47,18 @@ export function CategoryItem({
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	const currentBrowseValue = searchParams.get("browse");
-	const currentCategory = searchParams.get("category");
+	const currentTitle = searchParams.get("title");
+	const currentCategoryId = searchParams.get("categoryId");
 
-	const isSelected = currentCategory === value;
+	const isSelected = currentCategoryId === value;
 
 	const categoryClickHandler = () => {
 		const url = qs.stringifyUrl(
 			{
 				url: pathname,
 				query: {
-					browse: currentBrowseValue,
-					category: isSelected ? null : value,
+					title: currentTitle,
+					categoryId: isSelected ? null : value,
 				},
 			},
 			{ skipNull: true, skipEmptyString: true },

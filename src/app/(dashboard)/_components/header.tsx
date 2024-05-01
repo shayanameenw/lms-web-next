@@ -3,16 +3,16 @@
 import { UserButton } from "@clerk/nextjs";
 import { BookType, LogOut, Menu, Search, X } from "lucide-react";
 import { default as Link } from "next/link";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { type ReactNode, useState, useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { default as qs } from "query-string";
+import { type ReactNode, useEffect, useState } from "react";
 import { Sidebar } from "~/app/(dashboard)/_components/sidebar";
 import { ThemeMenu } from "~/components/theme/theme-menu";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
-import { cn } from "~/lib/utils";
-import { default as qs } from "query-string";
 import { useDebounce } from "~/hooks/use-debounce";
+import { cn } from "~/lib/utils";
 
 interface HeaderProps {
 	className?: string;
@@ -20,9 +20,9 @@ interface HeaderProps {
 
 export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 	const [isSearching, setIsSearching] = useState(false);
-	const [browseValue, setBrowseValue] = useState("");
+	const [title, setTitle] = useState("");
 
-	const debouncedBrowseValue = useDebounce(browseValue);
+	const debouncedTitle = useDebounce(title);
 
 	const pathname = usePathname();
 
@@ -33,23 +33,22 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	const currentBrowseValue = searchParams.get("browse");
-	const currentCategory = searchParams.get("category");
+	const currentCategoryId = searchParams.get("categoryId");
 
 	useEffect(() => {
 		const url = qs.stringifyUrl(
 			{
 				url: pathname,
 				query: {
-					browse: debouncedBrowseValue,
-					category: currentCategory,
+					title: debouncedTitle,
+					categoryId: currentCategoryId,
 				},
 			},
 			{ skipNull: true, skipEmptyString: true },
 		);
 
 		router.push(url);
-	}, [pathname, router, debouncedBrowseValue, currentCategory]);
+	}, [pathname, router, debouncedTitle, currentCategoryId]);
 
 	return (
 		<header
@@ -69,9 +68,9 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 				{isBrowsePage && (
 					<Input
 						onChange={(event) => {
-							setBrowseValue(event.target.value);
+							setTitle(event.target.value);
 						}}
-						value={browseValue}
+						value={title}
 						className={cn("hidden md:block lg:w-96")}
 						type="text"
 						placeholder="Search..."
@@ -111,9 +110,9 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 						{isSearching && (
 							<Input
 								onChange={(event) => {
-									setBrowseValue(event.target.value);
+									setTitle(event.target.value);
 								}}
-								value={browseValue}
+								value={title}
 								className={cn("border-none")}
 								type="text"
 								placeholder="Search..."
