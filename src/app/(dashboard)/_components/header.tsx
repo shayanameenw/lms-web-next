@@ -29,7 +29,6 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 	const pathname = usePathname();
 
 	const isTeacherPage = pathname.startsWith("/teacher");
-	const isPlayerPage = pathname.startsWith("chapter");
 	const isBrowsePage = pathname.startsWith("/courses");
 
 	const router = useRouter();
@@ -81,7 +80,7 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 			</div>
 			<div className={cn("flex items-center gap-2")}>
 				{!isSearching &&
-					(isTeacherPage || isPlayerPage ? (
+					(isTeacherPage ? (
 						<Link href="/">
 							<Button
 								className={cn("rounded-full p-2 md:rounded-lg gap-2")}

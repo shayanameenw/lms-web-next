@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import type { CourseWithProgress } from "~/queries/get-courses";
 
-import { default as Link } from "next/link";
+import { BookOpen } from "lucide-react";
 import { default as Image } from "next/image";
+import { default as Link } from "next/link";
 import {
 	Card,
 	CardContent,
@@ -11,10 +12,9 @@ import {
 	CardHeader,
 	CardTitle,
 } from "~/components/ui/card";
-import { cn } from "~/lib/utils";
 import { formatCurrencyUS } from "~/lib/format";
+import { cn } from "~/lib/utils";
 import { IconBadge } from "./icon-badge";
-import { BookOpen } from "lucide-react";
 
 interface CourseCardProps {
 	course: CourseWithProgress;

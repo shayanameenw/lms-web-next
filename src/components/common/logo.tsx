@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import { default as Link } from "next/link";
+import type { ReactNode } from "react";
 import { primaryFont } from "~/lib/fonts";
 import { cn } from "~/lib/utils";
 

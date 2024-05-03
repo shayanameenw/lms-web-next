@@ -69,7 +69,7 @@ export function ChapterActions({
 
 			toast.success("Chapter Deleted Successfully.");
 			router.refresh();
-			router.push("/teacher/courses/" + courseId);
+			router.push(`/teacher/courses/${courseId}`);
 		} catch (error) {
 			toast.error("An error occurred. Please try again later.");
 		} finally {
