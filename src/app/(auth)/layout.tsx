@@ -2,9 +2,9 @@ import type { PropsWithChildren, ReactNode } from "react";
 import { cn } from "~/lib/utils";
 
 export default function Layout({
-	children,
+  children,
 }: Readonly<PropsWithChildren>): ReactNode {
-	return (
-		<main className={cn("h-full grid place-content-center")}>{children}</main>
-	);
+  return (
+    <main className={cn("h-full grid place-content-center")}>{children}</main>
+  );
 }

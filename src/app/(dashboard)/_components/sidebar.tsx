@@ -11,46 +11,46 @@ import { guestsRoutes, teacherRoutes } from "~/lib/routes";
 import { cn } from "~/lib/utils";
 
 interface SidebarProps {
-	className?: string;
+  className?: string;
 }
 
 export function Sidebar({ className }: Readonly<SidebarProps>): ReactNode {
-	const pathName = usePathname();
+  const pathName = usePathname();
 
-	const sidebarRoutes = pathName.startsWith("/teacher")
-		? teacherRoutes
-		: guestsRoutes;
+  const sidebarRoutes = pathName.startsWith("/teacher")
+    ? teacherRoutes
+    : guestsRoutes;
 
-	return (
-		<aside className={cn(className)}>
-			<Logo />
-			<ScrollArea className={cn("flex-1")}>
-				<ul className={cn("flex flex-col")}>
-					{sidebarRoutes.map(({ url, label }) => {
-						const isSelected =
-							pathName === url ||
-							(pathName !== "/" && pathName.startsWith(url));
+  return (
+    <aside className={cn(className)}>
+      <Logo />
+      <ScrollArea className={cn("flex-1")}>
+        <ul className={cn("flex flex-col")}>
+          {sidebarRoutes.map(({ url, label }) => {
+            const isSelected =
+              pathName === url ||
+              (pathName !== "/" && pathName.startsWith(url));
 
-						console.log("isSelected", isSelected ? "YES" : "NO");
+            console.log("isSelected", isSelected ? "YES" : "NO");
 
-						return (
-							<li key={label}>
-								<Link href={url}>
-									<Button
-										className={cn(
-											"rounded-none w-full justify-stretch",
-											isSelected && "md:border-r-2 border-primary",
-										)}
-										variant={isSelected ? "secondary" : "ghost"}
-									>
-										{label}
-									</Button>
-								</Link>
-							</li>
-						);
-					})}
-				</ul>
-			</ScrollArea>
-		</aside>
-	);
+            return (
+              <li key={label}>
+                <Link href={url}>
+                  <Button
+                    className={cn(
+                      "rounded-none w-full justify-stretch",
+                      isSelected && "md:border-r-2 border-primary",
+                    )}
+                    variant={isSelected ? "secondary" : "ghost"}
+                  >
+                    {label}
+                  </Button>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </ScrollArea>
+    </aside>
+  );
 }

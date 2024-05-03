@@ -1,65 +1,100 @@
-import db from "~/lib/db";
+import type { Attachment } from "~/lib/db";
+
+import type { Chapter } from "@prisma/client";
+import { default as db } from "~/lib/db";
 
 interface GetChapterProps {
-	userId: string;
-	courseId: string;
-	chapterId: string;
+  userId: string;
+  courseId: string;
+  chapterId: string;
 }
 
 export async function getChapter({
-	userId,
-	courseId,
-	chapterId,
+  userId,
+  courseId,
+  chapterId,
 }: Readonly<GetChapterProps>) {
-	try {
-		const chapter = await db.chapter.findUnique({
-			where: {
-				id: chapterId,
-				isPublished: true,
-				courseId,
-				course: {
-					isPublished: true,
-					userId,
-				},
-			},
-			include: {
-				course: {
-					include: {
-						chapters: {
-							orderBy: {
-								position: "asc",
-							},
-						},
-						attachments: true,
-						purchases: {
-							where: { userId },
-						},
-					},
-				},
-				muxData: true,
-				userProgresses: {
-					where: {
-						userId,
-					},
-				},
-			},
-		});
+  try {
+    const purchase = await db.purchase.findUnique({
+      where: {
+        userId_courseId: {
+          userId,
+          courseId,
+        },
+      },
+    });
 
-		if (!chapter) {
-			return;
-		}
+    const course = await db.course.findUnique({
+      where: {
+        id: courseId,
+        isPublished: true,
+      },
+      select: {
+        price: true,
+      },
+    });
 
-		if (!chapter.isFree && chapter.course.purchases.length < 1) {
-			chapter.course.chapters = chapter.course.chapters.filter(
-				(currChapter) => currChapter.id === chapter.id,
-			);
-			chapter.course.attachments = [];
-			chapter.userProgresses = [];
-			chapter.muxData = null;
-		}
+    const chapter = await db.chapter.findUnique({
+      where: {
+        id: chapterId,
+        isPublished: true,
+      },
+    });
 
-		return chapter;
-	} catch (error) {
-		console.log("[GET_CHAPTER]", error);
-	}
+    if (!course || !chapter) {
+      throw new Error("Course/Chapter Not Found!");
+    }
+
+    let muxData = null;
+    let attachments: Attachment[] = [];
+    let nextChapter: Chapter | null = null;
+
+    if (purchase) {
+      attachments = await db.attachment.findMany({ where: { courseId } });
+    }
+
+    if (chapter.isFree || purchase) {
+      muxData = await db.muxData.findUnique({
+        where: {
+          chapterId,
+        },
+      });
+
+      nextChapter = await db.chapter.findFirst({
+        where: {
+          courseId,
+          isPublished: true,
+          position: {
+            gt: chapter.position,
+          },
+        },
+        orderBy: {
+          position: "asc",
+        },
+      });
+    }
+
+    const userProgress = await db.userProgress.findUnique({
+      where: {
+        userId_chapterId: {
+          userId,
+          chapterId,
+        },
+      },
+    });
+
+    return {
+      attachments,
+      chapter,
+      course,
+      muxData,
+      nextChapter,
+      userProgress,
+      purchase,
+    };
+  } catch (error) {
+    console.log("[GET_CHAPTER]", error);
+
+    return {};
+  }
 }

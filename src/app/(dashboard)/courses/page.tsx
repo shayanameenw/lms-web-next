@@ -7,31 +7,31 @@ import { cn } from "~/lib/utils";
 import { getCourses } from "~/queries/get-courses";
 
 export default async function Page({
-	searchParams,
+  searchParams,
 }: {
-	searchParams: { title: string; categoryId: string };
+  searchParams: { title: string; categoryId: string };
 }): Promise<ReactNode> {
-	const { userId } = auth();
+  const { userId } = auth();
 
-	if (!userId) {
-		return redirect("/sign-in");
-	}
+  if (!userId) {
+    return redirect("/sign-in");
+  }
 
-	const categories = await db.category.findMany({
-		orderBy: {
-			name: "asc",
-		},
-	});
+  const categories = await db.category.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  });
 
-	const courses = await getCourses({ userId, ...searchParams });
+  const courses = await getCourses({ userId, ...searchParams });
 
-	return (
-		<>
-			<BrowseSection
-				categories={categories}
-				className={cn("py-4 px-8 h-[calc(100vh_-_4rem)]")}
-				courses={courses}
-			/>
-		</>
-	);
+  return (
+    <>
+      <BrowseSection
+        categories={categories}
+        className={cn("py-4 px-8 h-[calc(100vh_-_4rem)]")}
+        courses={courses}
+      />
+    </>
+  );
 }

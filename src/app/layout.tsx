@@ -9,28 +9,31 @@ import { ThemeProvider } from "~/providers/theme-provider";
 import "~/styles/globals.css";
 
 export const metadata: Metadata = {
-	title: "LMS Web Next",
+  title: "LMS Web Next",
 };
 
 export default function Layout({
-	children,
+  children,
 }: Readonly<PropsWithChildren>): ReactNode {
-	return (
-		<ClerkProvider>
-			<html suppressHydrationWarning lang="en">
-				<body className={cn(secondaryFont.className)}>
-					<ThemeProvider
-						disableTransitionOnChange
-						enableSystem
-						attribute="class"
-						defaultTheme="system"
-					>
-						<UploadthingProvider />
-						{children}
-						<ToasterProvider />
-					</ThemeProvider>
-				</body>
-			</html>
-		</ClerkProvider>
-	);
+  return (
+    <ClerkProvider>
+      <html
+        suppressHydrationWarning
+        lang="en"
+      >
+        <body className={cn(secondaryFont.className)}>
+          <ThemeProvider
+            disableTransitionOnChange
+            enableSystem
+            attribute="class"
+            defaultTheme="system"
+          >
+            <UploadthingProvider />
+            {children}
+            <ToasterProvider />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
+  );
 }

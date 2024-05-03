@@ -4,5 +4,5 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "~/app/api/uploadthing/core";
 
 export function UploadthingProvider(): ReactNode {
-	return <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />;
+  return <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />;
 }
