@@ -10,7 +10,12 @@
     "ui:add": "pnpx shadcn-ui add",
     "db:generate": "pnpx prisma generate",
     "db:push": "pnpx prisma db push",
+    "db:seed": "pnpx prisma db seed",
+    "db:reset": "pnpx prisma migrate reset",
     "db:migrate": "pnpx prisma migrate dev"
+  },
+  "prisma": {
+    "seed": "pnpx tsx prisma/seed.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.6",
