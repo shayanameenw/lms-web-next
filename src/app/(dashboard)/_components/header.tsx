@@ -28,7 +28,7 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
 
   const pathname = usePathname();
 
-  const isTeacherPage = pathname.startsWith("/teacher");
+  const isTeacherPage = pathname.startsWith("/instructor");
   const isBrowsePage = pathname.startsWith("/courses");
 
   const router = useRouter();
@@ -94,13 +94,13 @@ export function Header({ className }: Readonly<HeaderProps>): ReactNode {
               </Button>
             </Link>
           ) : (
-            <Link href="/teacher">
+            <Link href="/instructor">
               <Button
                 className={cn("rounded-full p-2 md:rounded-lg")}
                 variant="outline"
               >
                 <BookType className={cn("md:hidden")} />
-                <span className={cn("hidden md:block")}>Teacher Mode</span>
+                <span className={cn("hidden md:block")}>Instructor Mode</span>
               </Button>
             </Link>
           ))}

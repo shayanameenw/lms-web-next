@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
-import { columns } from "~/app/(dashboard)/teacher/courses/_components/columns";
-import { DataTable } from "~/app/(dashboard)/teacher/courses/_components/data-table";
+import { columns } from "~/app/(dashboard)/instructor/courses/_components/columns";
+import { DataTable } from "~/app/(dashboard)/instructor/courses/_components/data-table";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { default as db } from "~/lib/db";
 import { cn } from "~/lib/utils";

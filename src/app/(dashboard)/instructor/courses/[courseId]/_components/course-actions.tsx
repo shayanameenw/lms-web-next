@@ -19,19 +19,17 @@ import {
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-interface ChapterActionsProps {
+interface CourseActionsProps {
   isPublished: boolean;
   courseId: string;
-  chapterId: string;
   disabled: boolean;
 }
 
-export function ChapterActions({
+export function CourseActions({
   isPublished,
   courseId,
-  chapterId,
   disabled,
-}: Readonly<ChapterActionsProps>): ReactNode {
+}: Readonly<CourseActionsProps>): ReactNode {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
@@ -41,17 +39,13 @@ export function ChapterActions({
       setIsLoading(true);
 
       if (isPublished) {
-        await axios.patch(
-          `/api/courses/${courseId}/chapters/${chapterId}/unpublish`,
-        );
+        await axios.patch(`/api/courses/${courseId}/unpublish`);
       } else {
-        await axios.patch(
-          `/api/courses/${courseId}/chapters/${chapterId}/publish`,
-        );
+        await axios.patch(`/api/courses/${courseId}/publish`);
       }
 
       toast.success(
-        `Chapter ${isPublished ? "Unpublished" : "Published"} Successfully.`,
+        `Course ${isPublished ? "Unpublished" : "Published"} Successfully.`,
       );
       router.refresh();
     } catch (error) {
@@ -65,11 +59,11 @@ export function ChapterActions({
     try {
       setIsLoading(true);
 
-      await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`);
+      await axios.delete(`/api/courses/${courseId}`);
 
       toast.success("Chapter Deleted Successfully.");
       router.refresh();
-      router.push(`/teacher/courses/${courseId}`);
+      router.push("/instructor/courses");
     } catch (error) {
       toast.error("An error occurred. Please try again later.");
     } finally {

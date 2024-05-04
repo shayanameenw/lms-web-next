@@ -89,7 +89,7 @@ export const columns: ColumnDef<Course>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
               <Link
-                href={`/teacher/courses/${id}`}
+                href={`/instructor/courses/${id}`}
                 className={cn("flex items-center gap-2")}
               >
                 <Pencil size={16} />

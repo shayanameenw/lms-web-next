@@ -17,11 +17,11 @@ export const teacherRoutes = [
   {
     Icon: BarChart,
     label: "Analytics",
-    url: "/teacher",
+    url: "/instructor",
   },
   {
     Icon: List,
     label: "Courses",
-    url: "/teacher/courses",
+    url: "/instructor/courses",
   },
 ];

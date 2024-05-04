@@ -1,8 +1,10 @@
+import type { NextRequest as NextRequestType } from "next/server";
+
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { type NextRequest, NextResponse } from "next/server";
 import { default as db } from "~/lib/db";
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequestType): Promise<NextResponse> {
   try {
     const { userId } = auth();
 

@@ -8,7 +8,7 @@ import { type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z as zod } from "zod";
-import { ChaptersList } from "~/app/(dashboard)/teacher/courses/[courseId]/_components/chapters-list";
+import { ChaptersList } from "~/app/(dashboard)/instructor/courses/[courseId]/_components/chapters-list";
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -81,7 +81,7 @@ export function ChapterForm({
   };
 
   const onEdit = (id: string) => {
-    router.push(`/teacher/courses/${courseId}/chapters/${id}`);
+    router.push(`/instructor/courses/${courseId}/chapters/${id}`);
   };
 
   return !isCreating ? (

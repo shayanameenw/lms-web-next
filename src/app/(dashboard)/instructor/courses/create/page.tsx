@@ -41,7 +41,7 @@ export default function Page(): ReactNode {
     try {
       const response = await axios.post("/api/courses", data);
 
-      router.push(`/teacher/courses/${response.data.id}`);
+      router.push(`/instructor/courses/${response.data.id}`);
     } catch (error) {
       toast.error("An error occurred. Please try again later.");
     }

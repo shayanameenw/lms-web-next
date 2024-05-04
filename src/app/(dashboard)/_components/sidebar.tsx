@@ -17,7 +17,7 @@ interface SidebarProps {
 export function Sidebar({ className }: Readonly<SidebarProps>): ReactNode {
   const pathName = usePathname();
 
-  const sidebarRoutes = pathName.startsWith("/teacher")
+  const sidebarRoutes = pathName.startsWith("/instructor")
     ? teacherRoutes
     : guestsRoutes;
 
@@ -30,8 +30,6 @@ export function Sidebar({ className }: Readonly<SidebarProps>): ReactNode {
             const isSelected =
               pathName === url ||
               (pathName !== "/" && pathName.startsWith(url));
-
-            console.log("isSelected", isSelected ? "YES" : "NO");
 
             return (
               <li key={label}>
